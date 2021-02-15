@@ -26,9 +26,9 @@ class Categories(models.Model):
     user_id = models.ForeignKey(
         User, verbose_name="Пользователь", on_delete=models.CASCADE
     )
-    name = models.CharField("Фамилия", max_length=100)
+    name = models.CharField("Категория", max_length=100)
     parent_id = models.ForeignKey(
-        'self', verbose_name="Категория", on_delete=models.CASCADE
+        'self', verbose_name="Категория", on_delete=models.CASCADE, blank=True, null=True
     )
 
     def __str__(self):
@@ -43,7 +43,7 @@ class Transactions(models.Model):
     """
     Транзакции
     """
-    type = models.CharField("Имя", max_length=100)
+    type = models.CharField("Тип", max_length=100)
     amount = models.FloatField("Количество")
     comment = models.TextField("Коментарий")
     date = models.DateTimeField("Дата", default=datetime.now())
