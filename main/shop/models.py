@@ -48,10 +48,10 @@ class Transactions(models.Model):
     comment = models.TextField("Коментарий")
     date = models.DateTimeField("Дата", default=datetime.now())
     category_id = models.ForeignKey(
-        Categories, verbose_name="Категория", on_delete=models.SET_NULL
+        Categories, verbose_name="Категория", on_delete=models.CASCADE
     )
     user_id = models.ForeignKey(
-        User, verbose_name="Пользователь", on_delete=models.SET_NULL
+        User, verbose_name="Пользователь", on_delete=models.CASCADE
     )
 
     def __str__(self):
