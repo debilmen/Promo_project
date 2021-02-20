@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+    <html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <title>*</title>
+    </head>
+    <body>
+        <header>
+            <hl>Объявления</hl>
+        </header>
+        <nav>
+            <a href="{% url 'index' %}">Главная</a>
+            <a href="{% url 'add' %}">Добавить</a>
+        </nav>
+        <section>
+            <h2>Добавление объявления</h2>
+                <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" value="Добавить">
+                </form>
+        </section>
+    </body>
+    </html>
