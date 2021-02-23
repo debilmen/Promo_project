@@ -12,8 +12,12 @@
         <h1>Promo project</h1>
         <p>Контроль бюджета для всей семьи</p>
         <div class="buttons-container">
-            <button>Войти</button>
-            <button>Создать аккаунт</button>
+           <form action="{% url 'login' %}" target="_blank">
+                <button>вход</button>
+            </form>
+            <form action="{% url 'register' %}" target="_blank">
+                <button>Создать аккаунт</button>
+            </form>
         </div>
     </div>
     <div class="page">

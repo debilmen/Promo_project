@@ -1,11 +1,12 @@
-from django.shortcuts import render
+from django.contrib.auth import authenticate, login
+from django.shortcuts import render, redirect
 
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 
-from .forms import UserForm
+from .forms import SignUpForm
 from .models import User
 
 
@@ -14,11 +15,19 @@ def index(request):
     return render(request, 'shop/index.html')
 
 
-class UserCreateView(CreateView):
-    template_name = 'shop/create_user.html'
-    form_class = UserForm
-    success_url = reverse_lazy('index')
-
+def signup(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            form.save()
+            email = form.cleaned_data.get('email')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=email, password=raw_password)
+            login(request, user)
+            return redirect('index')
+    else:
+        form = SignUpForm()
+    return render(request, 'registration/register.html', {'form': form})
 
 #def create_user(request):
 #    """"Не работает))))"""
