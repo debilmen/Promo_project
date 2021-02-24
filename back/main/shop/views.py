@@ -3,18 +3,14 @@ from django.shortcuts import render, redirect
 
 from django.http import JsonResponse
 from django.shortcuts import render
-from django.urls import reverse_lazy
-from django.views.generic import CreateView
-
-from .forms import SignUpForm
-from .models import User
 
 
 def index(request):
+
     """Главная страничка, подключите css плз в static/shop/style.css"""
     return render(request, 'shop/index.html')
 
-
+"""""
 def signup(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
