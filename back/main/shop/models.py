@@ -96,7 +96,7 @@ class Categories(models.Model):
     Категории
     """
     user_id = models.ForeignKey(
-        settings.AUTH_USER_MODEL, verbose_name="Пользователь", on_delete=models.CASCADE
+        User, verbose_name="Пользователь", on_delete=models.CASCADE
     )
     name = models.CharField("Категория", max_length=100)
     parent_id = models.ForeignKey(

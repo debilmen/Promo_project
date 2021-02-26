@@ -18,7 +18,12 @@
             <form action="{% url 'register' %}" target="_blank">
                 <button>Создать аккаунт</button>
             </form>
-
+            <form action="{% url 'logout' %}" target="_blank">
+                <button>Выход</button>
+            </form>
+            {% if user.is_authenticated %}
+                <h1>Hi! {{user.first_name}}</h1>
+            {% endif %}
         </div>
     </div>
     <div class="page">
