@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Createcat</title>
+</head>
+<body>
+     <form method="post">
+         {% if user.is_authenticated %}
+                {% csrf_token %}
+                {{ form.as_p }}
+         <p>{{user.id}}</p>
+         {% endif %}
+         <input type="submit" value="Добавить">
+     </form>
+
+</body>
+</html>

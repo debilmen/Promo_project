@@ -7,13 +7,13 @@
 <body>
      {% if user.is_authenticated %}
         <h1>Hi! {{user.first_name}}</h1>
-            <p>{% if context %}</p>
+
                 {% for category in categories %}
-                    <p>{{ category.name }}</p>
+                <div>
+                    <h2>{{ category.name }}</h2>
+                </div>
                 {% endfor %}
-                {% else %}
-                     <p>no cat, loshara, sozdai</p>
-                {% endif %}
+     <p>{{user_id}}</p>
     {% endif %}
 </body>
 </html>

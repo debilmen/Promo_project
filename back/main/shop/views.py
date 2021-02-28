@@ -1,13 +1,12 @@
-from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
 
-from django.http import JsonResponse, request
+from django.shortcuts import redirect, get_object_or_404
+
 from django.shortcuts import render
-from django.utils.http import is_safe_url
-from django.views.generic import CreateView, FormView, RedirectView
+from django.views.generic import CreateView, FormView
 from django.contrib.auth.views import LogoutView as BaseLogoutView
-from .forms import RegisterForm, LoginForm
-from .models import Categories, Transactions
+from .forms import RegisterForm, LoginForm, CreateCategoryForm
+from .models import Categories, User
 
 
 def index(request):
@@ -43,8 +42,15 @@ class LogoutView(BaseLogoutView):
     next_page = 'index'
 
 
-class CreateCategory:
-    pass
+class CreateCategory(CreateView):
+    form_class = CreateCategoryForm
+    template_name = 'shop/create_category.html'
+    success_url = '/categories/'
+
+    def form_valid(self, form):
+        form.instance.user_id = self.request.user
+        return super(CreateCategory, self).form_valid(form)
+
 
 
 class PatchCategory:
@@ -52,12 +58,9 @@ class PatchCategory:
 
 
 def by_category(request):
-
-    user_id = request.GET.get('user.id')
+    uid = request.user.id
     #trans = Transactions.objects.filter(category=category_id)
-    categories = Categories.objects.filter(user_id=user_id)
-    if categories is None:
-        return render(request, 'shop/categories.html')
-    else:
-        return render(request, 'shop/categories.html', {'categories': categories})
+    categories = Categories.objects.all().filter(user_id=uid)
+    context = {'categories': categories}
+    return render(request, 'shop/categories.html', context)
 

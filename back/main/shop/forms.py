@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
-from .models import User
+from .models import User, Categories
 
 
 class RegisterForm(forms.ModelForm):
@@ -52,3 +52,10 @@ class UserChangeForm(forms.ModelForm):
 class LoginForm(forms.Form):
     email = forms.EmailField(label='Email')
     password = forms.CharField(widget=forms.PasswordInput)
+
+
+class CreateCategoryForm(forms.ModelForm):
+    class Meta:
+        model = Categories
+        fields = ('name', 'parent_id')
+
