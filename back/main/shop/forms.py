@@ -59,3 +59,8 @@ class CreateCategoryForm(forms.ModelForm):
         model = Categories
         fields = ('name', 'parent_id')
 
+
+class UpdateCategoryForm(forms.ModelForm):
+    class Meta:
+        model = Categories
+        fields = ('name', 'parent_id')

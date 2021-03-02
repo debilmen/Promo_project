@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>patch</title>
+</head>
+<body>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+    <input type="submit" value="Update">
+</form>
+
+<form action="{% url 'delete_category' object.id %}">
+                <button>Удалить</button>
+            </form>
+
+</body>
+</html>

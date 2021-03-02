@@ -10,7 +10,8 @@
 
                 {% for category in categories %}
                 <div>
-                    <h2>{{ category.name }}</h2>
+        <a href="{% url 'patch_category' category.id %}">
+            {{ category.name }}</a>
                 </div>
                 {% endfor %}
      <p>{{user_id}}</p>

@@ -3,9 +3,9 @@ from django.contrib.auth import authenticate, login
 from django.shortcuts import redirect, get_object_or_404
 
 from django.shortcuts import render
-from django.views.generic import CreateView, FormView
+from django.views.generic import CreateView, FormView, UpdateView, DeleteView
 from django.contrib.auth.views import LogoutView as BaseLogoutView
-from .forms import RegisterForm, LoginForm, CreateCategoryForm
+from .forms import RegisterForm, LoginForm, CreateCategoryForm, UpdateCategoryForm
 from .models import Categories, User
 
 
@@ -46,16 +46,24 @@ class CreateCategory(CreateView):
     form_class = CreateCategoryForm
     template_name = 'shop/create_category.html'
     success_url = '/categories/'
-
+'''
     def form_valid(self, form):
         form.instance.user_id = self.request.user
         return super(CreateCategory, self).form_valid(form)
+'''
 
 
+class UpdateCategory(UpdateView):
+    model = Categories
+    fields = ['name', 'parent_id']
+    template_name = 'shop/patch_category.html'
+    success_url = '/categories'
 
-class PatchCategory:
-    pass
 
+class DeleteCategory(DeleteView):
+    model = Categories
+    template_name = 'shop/delete_category.html'
+    success_url = '/categories'
 
 def by_category(request):
     uid = request.user.id
