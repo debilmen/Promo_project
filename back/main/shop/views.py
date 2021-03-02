@@ -1,13 +1,12 @@
 from django.contrib.auth import authenticate, login
-from django.shortcuts import render, redirect
 
-from django.http import JsonResponse
+from django.shortcuts import redirect, get_object_or_404
+
 from django.shortcuts import render
-from django.urls import reverse_lazy
-from django.views.generic import CreateView
-
-from .forms import SignUpForm
-from .models import User
+from django.views.generic import CreateView, FormView, UpdateView, DeleteView
+from django.contrib.auth.views import LogoutView as BaseLogoutView
+from .forms import RegisterForm, LoginForm, CreateCategoryForm, UpdateCategoryForm
+from .models import Categories, User
 
 
 def index(request):
@@ -15,25 +14,61 @@ def index(request):
     return render(request, 'shop/index.html')
 
 
-def signup(request):
-    if request.method == 'POST':
-        form = SignUpForm(request.POST)
-        if form.is_valid():
-            form.save()
-            email = form.cleaned_data.get('email')
-            raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username=email, password=raw_password)
+class RegisterView(CreateView):
+    """Регистрация пользователя"""
+    form_class = RegisterForm
+    template_name = 'registration/register.html'
+    success_url = '/login/'
+
+
+class LoginView(FormView):
+    """Вход"""
+    form_class = LoginForm
+    success_url = '/'
+    template_name = 'registration/login.html'
+
+    def form_valid(self, form):
+        request = self.request
+        email = form.cleaned_data.get('email')
+        password = form.cleaned_data.get('password')
+        user = authenticate(request, username=email, password=password)
+        if user is not None:
             login(request, user)
             return redirect('index')
-    else:
-        form = SignUpForm()
-    return render(request, 'registration/register.html', {'form': form})
+        return super(LoginView, self).form_invalid(form)
 
-#def create_user(request):
-#    """"Не работает))))"""
-#    email = request.GET.get('email')
-#   password = request.GET.get('password')
-#    first_name = request.GET.get('first_name')
-#    last_name = request.GET.get('last_name ')
-#    User.objects.create(email=email, password=password, first_name=first_name, last_name=last_name)
-#    return render(request)
+
+class LogoutView(BaseLogoutView):
+    next_page = 'index'
+
+
+class CreateCategory(CreateView):
+    form_class = CreateCategoryForm
+    template_name = 'shop/create_category.html'
+    success_url = '/categories/'
+
+    def form_valid(self, form):
+        form.instance.user_id = self.request.user
+        return super(CreateCategory, self).form_valid(form)
+
+
+
+class UpdateCategory(UpdateView):
+    model = Categories
+    fields = ['name', 'parent_id']
+    template_name = 'shop/patch_category.html'
+    success_url = '/categories'
+
+
+class DeleteCategory(DeleteView):
+    model = Categories
+    template_name = 'shop/delete_category.html'
+    success_url = '/categories'
+
+def by_category(request):
+    uid = request.user.id
+    #trans = Transactions.objects.filter(category=category_id)
+    categories = Categories.objects.all().filter(user_id=uid)
+    context = {'categories': categories}
+    return render(request, 'shop/categories.html', context)
+
