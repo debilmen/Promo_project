@@ -46,11 +46,11 @@ class CreateCategory(CreateView):
     form_class = CreateCategoryForm
     template_name = 'shop/create_category.html'
     success_url = '/categories/'
-'''
+
     def form_valid(self, form):
         form.instance.user_id = self.request.user
         return super(CreateCategory, self).form_valid(form)
-'''
+
 
 
 class UpdateCategory(UpdateView):
