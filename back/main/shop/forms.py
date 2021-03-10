@@ -57,10 +57,20 @@ class LoginForm(forms.Form):
 class CreateCategoryForm(forms.ModelForm):
     class Meta:
         model = Categories
-        fields = ('name', 'parent_id')
+        fields = ['name', 'parent']
+
+    def __init__(self, *args, **kwargs):
+        self.user_id = kwargs.pop('user_id')
+        super(CreateCategoryForm, self).__init__(*args, **kwargs)
+        self.fields['parent'].queryset = Categories.objects.filter(user_id=self.user_id)
 
 
 class UpdateCategoryForm(forms.ModelForm):
     class Meta:
         model = Categories
-        fields = ('name', 'parent_id')
+        fields = ('name', 'parent')
+
+    def __init__(self, *args, **kwargs):
+        user_id = kwargs.pop('user_id')
+        super(UpdateCategoryForm, self).__init__(*args, **kwargs)
+        self.fields['parent'].queryset = Categories.objects.filter(user_id=user_id)

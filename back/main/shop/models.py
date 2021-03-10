@@ -3,6 +3,7 @@ from django.contrib.auth.models import BaseUserManager
 from django.db import models
 from datetime import datetime
 from django.conf import settings
+from mptt.models import MPTTModel, TreeForeignKey
 
 
 class UserManager(BaseUserManager):
@@ -91,7 +92,7 @@ class User(AbstractBaseUser):
         verbose_name_plural = "Пользователи"
 
 
-class Categories(models.Model):
+class Categories(MPTTModel):
     """
     Категории
     """
@@ -99,14 +100,14 @@ class Categories(models.Model):
         settings.AUTH_USER_MODEL, verbose_name="Пользователь", on_delete=models.CASCADE
     )
     name = models.CharField("Категория", max_length=100)
-    parent_id = models.ForeignKey(
+    parent = TreeForeignKey(
         'self', verbose_name="Категория", on_delete=models.CASCADE, blank=True, null=True
     )
 
     def __str__(self):
         return self.name
 
-    class Meta:
+    class MPTTMeta:
         verbose_name = "Категория"
         verbose_name_plural = "Категории"
 

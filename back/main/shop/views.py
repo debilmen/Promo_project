@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.mixins import UserPassesTestMixin
 
 from django.shortcuts import redirect, get_object_or_404
 
@@ -49,15 +50,43 @@ class CreateCategory(CreateView):
 
     def form_valid(self, form):
         form.instance.user_id = self.request.user
+
         return super(CreateCategory, self).form_valid(form)
 
+    def get_form_kwargs(self, *args, **kwargs):
+        form_kwargs = super(CreateCategory, self).get_form_kwargs()
+        form_kwargs.update({'user_id':self.request.user})
+        return form_kwargs
 
 
-class UpdateCategory(UpdateView):
+class UpdateCategory(UserPassesTestMixin, UpdateView):
     model = Categories
-    fields = ['name', 'parent_id']
+    form_class = UpdateCategoryForm
     template_name = 'shop/patch_category.html'
     success_url = '/categories'
+    """Сравнивает текущее id usera с user_id Catrgories(создателя категории) и, если совпадает, то чел может редачить.
+    Зачем? я не смог по другому, да и в категорию можно попасть просто вводом id категории в адресную строку
+    
+    А ну если true то тест проходит, и все ок, все продолжается.
+    """
+    def test_func(self, **kwargs):
+        a = self.request.user.id
+        pk = self.kwargs['pk']
+        b = Categories.objects.filter(id=pk).values('user_id').first()
+        if a == b['user_id']:
+            return True
+        else:
+            raise Exception('Cant see this cuz no permissions')
+
+    def form_valid(self, form):
+        form.instance.user_id = self.request.user
+        #safe(self.request)
+        return super(UpdateCategory, self).form_valid(form)
+
+    def get_form_kwargs(self, *args, **kwargs):
+        form_kwargs = super(UpdateCategory, self).get_form_kwargs()
+        form_kwargs.update({'user_id': self.request.user})
+        return form_kwargs
 
 
 class DeleteCategory(DeleteView):
@@ -65,10 +94,10 @@ class DeleteCategory(DeleteView):
     template_name = 'shop/delete_category.html'
     success_url = '/categories'
 
+
 def by_category(request):
     uid = request.user.id
     #trans = Transactions.objects.filter(category=category_id)
     categories = Categories.objects.all().filter(user_id=uid)
     context = {'categories': categories}
     return render(request, 'shop/categories.html', context)
-

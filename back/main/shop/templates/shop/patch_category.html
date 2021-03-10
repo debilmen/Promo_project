@@ -5,6 +5,7 @@
     <title>patch</title>
 </head>
 <body>
+{% if user.is_authenticated %}
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
@@ -14,6 +15,6 @@
 <form action="{% url 'delete_category' object.id %}">
                 <button>Удалить</button>
             </form>
-
+{% endif %}
 </body>
 </html>
