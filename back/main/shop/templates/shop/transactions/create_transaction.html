@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CreateTrans</title>
+</head>
+<body>
+       <form method="post">
+         {% if user.is_authenticated %}
+                {% csrf_token %}
+                {{form.as_p}}
+         <p>{{user.id}}</p>
+         {% endif %}
+         <input type="submit" value="Готово">
+     </form>
+</body>
+</html>
