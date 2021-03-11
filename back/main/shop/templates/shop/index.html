@@ -12,16 +12,30 @@
         <h1>Promo project</h1>
         <p>Контроль бюджета для всей семьи</p>
         <div class="buttons-container">
+            {% if not user.is_authenticated %}
            <form action="{% url 'login' %}" target="_blank">
                 <button>вход</button>
-            </form>
+           </form>
+
             <form action="{% url 'register' %}" target="_blank">
                 <button>Создать аккаунт</button>
             </form>
+            {% endif %}
+            {% if user.is_authenticated %}
+            <form action="{% url 'get_transactions' %}" target="_blank">
+                <p><button>Мои Транзакции</button></p>
+            </form>
+
+            <form action="{% url 'get_categories' %}" target="_blank">
+                <p><button>Мои категории</button></p>
+            </form>
+
+
+
             <form action="{% url 'logout' %}" target="_blank">
                 <button>Выход</button>
             </form>
-            {% if user.is_authenticated %}
+
                 <h1>Hi! {{user.first_name}}</h1>
             {% endif %}
         </div>

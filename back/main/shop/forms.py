@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
-from .models import User, Categories
+from .models import User, Categories, Transactions
 
 
 class RegisterForm(forms.ModelForm):
@@ -54,13 +54,25 @@ class LoginForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput)
 
 
-class CreateCategoryForm(forms.ModelForm):
+class CategoryForm(forms.ModelForm):
     class Meta:
         model = Categories
-        fields = ('name', 'parent_id')
+        fields = ['name', 'parent']
+
+    def __init__(self, *args, **kwargs):
+        self.user_id = kwargs.pop('user_id')
+        super(CategoryForm, self).__init__(*args, **kwargs)
+        self.fields['parent'].queryset = Categories.objects.filter(user_id=self.user_id)
 
 
-class UpdateCategoryForm(forms.ModelForm):
+class TransactionForm(forms.ModelForm):
     class Meta:
-        model = Categories
-        fields = ('name', 'parent_id')
+        model = Transactions
+        fields = ['type', 'amount', 'comment', 'date', 'category_id']
+
+    def __init__(self, *args, **kwargs):
+        self.user_id = kwargs.pop('user_id')
+        super(TransactionForm, self).__init__(*args, **kwargs)
+        self.fields['category_id'].queryset = Categories.objects.filter(user_id=self.user_id)
+
+

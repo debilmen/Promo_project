@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Transactions</title>
+</head>
+<body>
+    {% if user.is_authenticated %}
+    <h1>Hi!!</h1>
+    {% for transaction in transactions %}
+    <p><a href="{% url 'info_transaction' transaction.id %}"> {{transaction.type}} </a></p>
+
+
+    {%endfor%}
+    {% endif %}
+        <form action="{% url 'create_transaction' %}" target="_blank">
+                <p><button>Создать</button></p>
+            </form>
+</body>
+</html>

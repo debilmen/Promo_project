@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>info</title>
+</head>
+<body>
+    {% if user.is_authenticated%}
+    {% for transaction in transactions%}
+        <h1>{{transaction.type}}</h1>
+        <p>  {{transaction.amount}}</p>
+        <p>  {{transaction.comment}}</p>
+        <p>  {{transaction.date}}</p>
+        <p>  {{transaction.category_id}}</p>
+        <form action="{% url 'patch_transaction' transaction.id %}" target="_blank">
+                <p><button>Изменить</button></p>
+            </form>
+
+            <form action="{% url 'delete_transaction' transaction.id %}">
+                <button>Удалить</button>
+            </form>
+    {% endfor %}
+
+{% endif %}
+
+</body>
+</html>

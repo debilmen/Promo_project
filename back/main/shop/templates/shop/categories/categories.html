@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cat</title>
+</head>
+<body>
+     {% if user.is_authenticated %}
+        <h1>Hi! {{user.first_name}}</h1>
+
+            {% load mptt_tags %}
+<ul>
+    {% recursetree categories %}
+        <li>
+            <a href="{% url 'patch_category' node.id %}">
+            {{ node.name }}</a>
+            {% if not node.is_leaf_node %}
+                <ul class="children">
+                    {{children}}
+                </ul>
+            {% endif %}
+        </li>
+    {% endrecursetree %}
+</ul>
+{% endif %}
+            <form action="{% url 'create_category' %}" target="_blank">
+                <p><button>Создать</button></p>
+            </form>
+</body>
+</html>
